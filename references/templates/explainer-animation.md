@@ -51,6 +51,8 @@ TECHNICAL
 - prefers-reduced-motion: step-through mode by default, crossfades instead of camera flights.
 - Screen-reader: each beat's caption also in an aria-live region.
 
+[ASSETS (Blender): High/Maximum only, when the user said Blender is available or wasn't sure. Copy and adapt the block in blender-assets.md.]
+
 AVOID
 [4–8 lines from failure-modes.md, adapted.]
 

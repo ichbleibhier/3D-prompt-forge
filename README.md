@@ -20,6 +20,9 @@ It writes the prompt. It doesn't build the project.
    Generated prompts never load code from a CDN: they tell the model to
    `npm install three@0.160.0` (and any other library at an exact version) and inline
    the library source into the single HTML file, so it runs offline.
+   At the High and Maximum levels it can also have the coding model build detailed
+   assets (coral, rocks, creature bodies) in Blender, embed them in the same file, and
+   fall back to code-built shapes if Blender isn't available.
 4. **Hands you** the prompt in one copyable block, plus 2–3 follow-up revision prompts
    for the problems most likely to show up in the first result, and a note on which
    tool it suits.
@@ -122,6 +125,7 @@ SKILL.md                      the skill: steps and output format
 references/
   quality-tiers.md            the tier question and what each tier changes
   principles.md               rules every generated prompt follows
+  blender-assets.md           Blender-built models for High/Maximum web builds
   templates/                  one skeleton per project type
     interactive-toy.md
     scroll-website.md

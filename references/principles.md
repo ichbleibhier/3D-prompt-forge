@@ -138,6 +138,9 @@ Unless the user says otherwise:
   static loops, scroll animations become fades).
 - Handle resize. No console errors or warnings.
 - No CDN or remote script, module, or import-map URL anywhere in the file.
+- Models made in Blender (High and Maximum tiers only) are embedded the same way: `.glb`
+  as base64 in the HTML, loaded with `GLTFLoader.parse()`, never fetched. See
+  `blender-assets.md`.
 
 For Blender scenes, the equivalent is: Blender version, render engine, sample count,
 resolution, color management, and a Python script that builds the scene.

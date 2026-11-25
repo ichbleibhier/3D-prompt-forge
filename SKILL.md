@@ -21,6 +21,7 @@ Read these as needed. Do not paste them into the output.
 |---|---|
 | `references/quality-tiers.md` | Every time, before writing. The tier question, and what each tier changes. |
 | `references/principles.md` | Every time, before writing. The rules every generated prompt follows. |
+| `references/blender-assets.md` | High or Maximum browser builds where the user said Blender is available or wasn't sure. |
 | `references/templates/<type>.md` | After classifying. The skeleton for that type. |
 | `references/failure-modes.md` | When writing the AVOID section. Pick 4–8 lines for the type. |
 | `references/examples.md` | When unsure about tone, length, or level of detail. |
@@ -54,6 +55,9 @@ Always ask which quality tier the prompt should aim for (Cheapest, Balanced, Hig
 Maximum) before writing it, unless the user's words already pick one. The exact
 wording, the skip rules and what each tier changes are in `references/quality-tiers.md`.
 Use a multiple-choice question tool if one is available; otherwise send a numbered list.
+For browser builds, ask in the same message whether the executing model can use Blender;
+at High or Maximum, a yes or not-sure adds an `ASSETS (Blender)` section
+(`references/blender-assets.md`).
 
 Decide almost everything else yourself. Strong defaults beat a round-trip.
 
@@ -67,7 +71,7 @@ gave no hint. Examples that justify a question:
 - A hard platform constraint (must be React, must run in Blender 4.x, must be a GLB).
 
 Rules:
-- At most 3 questions including the tier, short, all in one message. Offer your default
+- At most 3 questions including the tier and the Blender question, short, all in one message. Offer your default
   for each so the user can reply "defaults" (Balanced for the tier).
 - Beyond the tier, if you can reasonably proceed, don't ask.
 - Never ask about colors, sizes, timing, camera, fonts, or libraries. Choose them.
@@ -121,6 +125,8 @@ Run this checklist against your draft. Fix misses before replying.
 
 - [ ] Tier asked (or taken from the user's words) and named first in `Decisions:`;
       scope, rendering, checks and length match it.
+- [ ] High/Maximum with Blender yes or not sure: an `ASSETS (Blender)` section with
+      per-asset budgets, the code fallback, and the asset checks in the definition of done.
 - [ ] BRAND block at the top; later sections use the names only.
 - [ ] Colors are hex, sizes have units, times are in seconds (and frames for film).
 - [ ] Anything that plays over time has `renderAt(t)` or `seek(t)`, seeded randomness,

@@ -51,6 +51,8 @@ TECHNICAL
 - prefers-reduced-motion: [show a still at frame [n] with a play button].
 - Small corner controls only: play/pause, frame scrubber, frame counter; mouse, touch, and Space/←/→. They auto-hide after 2 s and never overlap the HERO.
 
+[ASSETS (Blender): High/Maximum only, when the user said Blender is available or wasn't sure. Copy and adapt the block in blender-assets.md.]
+
 AVOID
 [4–8 lines from failure-modes.md, adapted.]
 

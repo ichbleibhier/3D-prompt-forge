@@ -35,7 +35,7 @@ CAMERA
 [If animated: keyframes in frames with interpolation, fps, frame range; loop if needed.]
 
 RENDER SETTINGS
-- Blender [4.2 LTS]. Python uses only bpy and the standard library; nothing downloaded at run time. Engine: [Cycles / EEVEE Next].
+- Blender [4.2 LTS or newer]. Python uses only bpy and the standard library; nothing downloaded at run time. Engine: [Cycles / EEVEE Next].
 - Cycles: [samples], adaptive threshold [0.01], denoiser [OpenImageDenoise], light paths [max bounces].
 - Resolution [W×H] at 100%. Color management: [AgX / Filmic], look [Medium Contrast], exposure [0].
 - Output: PNG 16-bit [or EXR], to //renders/.

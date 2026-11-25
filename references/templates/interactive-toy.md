@@ -31,6 +31,8 @@ CAMERA: [FOV, distance, height, target; orbit/zoom limits; damping]
 
 TECHNICAL: One index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source. [WebGL2 / WebGPU with WebGL2 fallback], sRGB, [AgX/ACES] exposure [n], DPR ≤ 2. [Key/fill/rim one-liner; env map]. [Shadow approach]. Pointer Events (mouse + touch), touch-action: none. 60 fps; if under 55, cut [first thing]. prefers-reduced-motion: [what changes].
 
+[ASSETS (Blender): High/Maximum only, when the user said Blender is available or wasn't sure. Copy and adapt the block in blender-assets.md.]
+
 AVOID
 [4–8 one-line items from failure-modes.md, adapted.]
 

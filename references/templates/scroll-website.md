@@ -59,6 +59,8 @@ PERFORMANCE
 - [Polygon/texture budget]. Fonts via Google Fonts with display=swap.
 - 60 fps while scrolling on a mid-range laptop.
 
+[ASSETS (Blender): High/Maximum only, when the user said Blender is available or wasn't sure. Copy and adapt the block in blender-assets.md.]
+
 AVOID
 [4–8 lines from failure-modes.md, adapted.]
 

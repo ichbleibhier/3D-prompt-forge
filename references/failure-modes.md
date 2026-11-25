@@ -129,3 +129,13 @@ Format: **Shortcut** → what to ask for instead.
 - **Hex colors used directly as linear values** → convert sRGB hex to linear before
   setting node inputs.
 - **Missing textures on another machine** → generated or packed textures only.
+
+## Blender assets in web builds
+
+- **Assets lying on their side** → export with `export_yup=True`.
+- **Assets half sunk into the ground** → origin at the base, lowest point at z = 0.
+- **Pale, washed-out materials** → convert sRGB hex to linear; keep the Principled BSDF
+  simple or bake procedural nodes to images.
+- **Huge meshes** → a triangle budget per asset, enforced with Decimate.
+- **`fetch('model.glb')`** → embed as base64 and use `GLTFLoader.parse()`.
+- **No plan B** → if Blender is missing, the prompt's procedural description is the fallback.

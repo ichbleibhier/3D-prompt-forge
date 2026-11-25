@@ -53,6 +53,8 @@ TECHNICAL
 - prefers-reduced-motion: no screen shake, no flashing.
 - Debug: `?debug=1` shows colliders and fps.
 
+[ASSETS (Blender): High/Maximum only, when the user said Blender is available or wasn't sure. Copy and adapt the block in blender-assets.md.]
+
 AVOID
 [4–8 lines from failure-modes.md, adapted.]
 
