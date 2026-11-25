@@ -1,6 +1,7 @@
 # Worked examples
 
-Four original examples showing the full output for a one-line input. Use them to
+Four original examples showing the full output for a one-line input, all at the
+Balanced tier (the user answered "defaults" to the tier question). Use them to
 calibrate tone, density, and length. Don't reuse their content; reuse their shape.
 
 ---
@@ -11,7 +12,7 @@ calibrate tone, density, and length. Don't reuse their content; reuse their shap
 
 **Output:**
 
-Decisions: interactive toy; 0.6 m seated plush on a branch stub; fabric look via sheen; "hug" becomes press-and-hold so it works with one finger; WebGL2 with a soft-body cage.
+Decisions: Balanced tier; interactive toy; 0.6 m seated plush on a branch stub; fabric look via sheen; "hug" becomes press-and-hold so it works with one finger; WebGL2 with a soft-body cage.
 
 ```text
 Build a single-file interactive 3D plush toy: a seated sloth you can squeeze, hug, and boop. It should feel like a soft handmade plush.
@@ -68,7 +69,7 @@ Best run in: a coding agent that can open a browser and take screenshots, since 
 
 **Output:**
 
-Decisions: scroll website; fictional "Marrow Lane Bakehouse" in an invented riverside town; HERO is a sourdough loaf that goes from dough to baked as you scroll; all copy in a SITE config so a real bakery can swap it in; Lenis for smoothing.
+Decisions: Balanced tier; scroll website; fictional "Marrow Lane Bakehouse" in an invented riverside town; HERO is a sourdough loaf that goes from dough to baked as you scroll; all copy in a SITE config so a real bakery can swap it in; Lenis for smoothing.
 
 ```text
 Build a single-page scroll website for Marrow Lane Bakehouse, a fictional neighborhood sourdough bakery on a corner in the riverside town of Ellery. It should feel like walking in at 6 a.m.: warm, floury, quiet.
@@ -167,7 +168,7 @@ Best run in: a coding agent with a browser it can scroll and screenshot at two w
 
 **Output:**
 
-Decisions: looping film; 1080×1080, 30 fps, 8 s (240 frames); the loop is closed by a gust that re-scatters the swept pile; original stylized fox in a hand-knit scarf; synthesized broom and wind sounds.
+Decisions: Balanced tier; looping film; 1080×1080, 30 fps, 8 s (240 frames); the loop is closed by a gust that re-scatters the swept pile; original stylized fox in a hand-knit scarf; synthesized broom and wind sounds.
 
 ```text
 Build a single-file 3D animated loop: a small fox sweeps autumn leaves into a neat pile, sighs with satisfaction, and a gust scatters them back. It should feel like a gentle, slightly funny daily ritual.
@@ -254,7 +255,7 @@ Best run in: a coding agent that can render specific frames headlessly and compa
 
 **Output:**
 
-Decisions: playable game; top-down 3/4 view of a small bay at night; the player rotates and focuses the lighthouse beam to reveal rocks and guide boats into harbor; 3-minute rounds with rising traffic; low-poly flat-shaded look.
+Decisions: Balanced tier; playable game; top-down 3/4 view of a small bay at night; the player rotates and focuses the lighthouse beam to reveal rocks and guide boats into harbor; 3-minute rounds with rising traffic; low-poly flat-shaded look.
 
 ```text
 Build a single-file 3D browser game: you are a lighthouse keeper guiding boats through a rocky bay at night by aiming the beam. Calm to start, frantic by the end, readable at a glance.

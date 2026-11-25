@@ -9,8 +9,10 @@ It writes the prompt. It doesn't build the project.
 ## What it does
 
 1. **Classifies** your idea into one of six project types.
-2. **Fills gaps with defaults** instead of interviewing you. It asks at most three
-   short questions, and only when the answer would change the whole result.
+2. **Asks your quality tier**: Cheapest, Balanced, High or Maximum. This sets how much
+   the prompt asks the coding model to build and check, and so how much it costs to
+   run. Everything else gets a sensible default instead of a question; it asks at most
+   two more short questions, and only when the answer would change the whole result.
 3. **Writes the prompt** from a type-specific template: a swappable brand block
    (HERO, PALETTE, SET, PROPS, ACCENTS), exact numbers for color, size, timing and
    camera, deterministic animation hooks, named failure modes to avoid, and a
@@ -60,6 +62,18 @@ CHECKS
 The full outputs run 200–1,000 words depending on the project. See
 [`references/examples.md`](references/examples.md) for four complete worked examples.
 
+## Quality tiers
+
+| Tier | What you get | Cost to run |
+|---|---|---|
+| **Cheapest** | A working first version: core features, simple materials, a quick check | Lowest; fine for a fast, low-cost model |
+| **Balanced** (default) | The full spec with standard checks | Medium |
+| **High** | Richer rendering, a polish checklist, stricter checks | Higher; best with the most capable model |
+| **Maximum** | Biggest scope, several review-and-fix rounds, three-browser testing | Highest |
+
+If your request already says "quick draft" or "highest quality", it skips the question.
+Details are in [`references/quality-tiers.md`](references/quality-tiers.md).
+
 ## The six prompt types
 
 | Type | For |
@@ -106,6 +120,7 @@ Just ask:
 ```
 SKILL.md                      the skill: steps and output format
 references/
+  quality-tiers.md            the tier question and what each tier changes
   principles.md               rules every generated prompt follows
   templates/                  one skeleton per project type
     interactive-toy.md

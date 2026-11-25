@@ -205,6 +205,9 @@ The checks must be specific to this prompt. "Make sure it works" is not a check.
 | Short loop (≤10 s), small game | 450–850 words |
 | Full website, longer film, explainer, Blender scene | 600–1,000 words |
 
+These bands are for the Balanced tier. Cheapest runs at 50–60% of the band, High at
++25%, and Maximum at +50% (see `quality-tiers.md`).
+
 The BRAND block, AVOID list, and definition of done are never cut to hit a number.
 Cut prose, repeated context, and anything the model would do well without being told.
 
