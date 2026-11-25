@@ -53,7 +53,7 @@ RESPONSIVE AND ACCESSIBILITY
 - The page is readable and navigable if WebGL fails (static poster gradient behind text).
 
 PERFORMANCE
-- One self-contained index.html. three.js 0.160.0 via a jsDelivr importmap; [other pinned libs].
+- One self-contained index.html, three.js 0.160.0, [other pinned libs, e.g. Lenis 1.1.13]. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source. [Add each other library to the npm install at its exact version and inline its ESM build under its bare specifier.]
 - Renderer: [WebGL2 / WebGPU with fallback]. DPR capped at 2 (1.5 below 768 px).
 - Render only when scroll or animation changes; pause when the tab is hidden.
 - [Polygon/texture budget]. Fonts via Google Fonts with display=swap.
@@ -67,7 +67,7 @@ Open index.html in a browser and, before delivering:
 1. At 1440×900: screenshot each section at sectionProgress 0.5.
 2. At 390×844: screenshot the same sections.
 3. Scroll forward to the end, then all the way back; screenshot section [n] mid-transition both ways and confirm they match.
-4. Read the console: zero errors or warnings.
+4. Read the console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
 5. [Site-specific checks: headline fully visible over the 3D at every section, CTA clickable, text contrast, no layout shift after fonts load, reduced-motion mode works.]
 6. Log fps during a full scroll; must average ≥ 55.
 Fix anything that fails, repeat, then deliver with the screenshots and a one-line result per check.

@@ -15,6 +15,9 @@ It writes the prompt. It doesn't build the project.
    (HERO, PALETTE, SET, PROPS, ACCENTS), exact numbers for color, size, timing and
    camera, deterministic animation hooks, named failure modes to avoid, and a
    definition of done the executing model has to verify in a browser.
+   Generated prompts never load code from a CDN: they tell the model to
+   `npm install three@0.160.0` (and any other library at an exact version) and inline
+   the library source into the single HTML file, so it runs offline.
 4. **Hands you** the prompt in one copyable block, plus 2–3 follow-up revision prompts
    for the problems most likely to show up in the first result, and a note on which
    tool it suits.

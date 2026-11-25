@@ -100,11 +100,30 @@ Verbs beat abstractions. "Interactive" says nothing; "boop, squish, toss" says w
 ## 6. Technical limits
 
 Unless the user says otherwise:
-- One self-contained `index.html`. No build step. Assets generated in code or inlined.
-- Pin versions. For three.js: `0.160.0` via an importmap from jsDelivr:
-  `"three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"` and
-  `"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"`.
-  Pin any other library the same way (GSAP 3.12.5, Lenis 1.1.13, cannon-es 0.20.0, …).
+- One self-contained `index.html` that loads no code from a CDN or any other network
+  source. Assets are generated in code or inlined.
+- Pin versions and inline the libraries. Install with npm at an exact version
+  (`npm install three@0.160.0`) and paste the library source into the HTML. For three.js:
+  - `build/three.module.js` has no imports of its own. The addons in `examples/jsm`
+    import each other by relative path (`EffectComposer.js` imports `./Pass.js` and
+    `../shaders/CopyShader.js`), and relative paths can't resolve once the code is inlined.
+  - So the app source keeps normal imports (`'three'`, `'three/addons/controls/OrbitControls.js'`)
+    and a short Node script, `build.mjs`, writes `index.html`. It reads
+    `three.module.js` and every addon used, follows their relative imports
+    transitively, rewrites each one to its `three/addons/<path>` specifier, and emits a
+    `<script type="importmap">` that maps every specifier to a
+    `data:text/javascript;base64,…` URL. The app follows in an inline
+    `<script type="module">`, with any `</script` in inlined code escaped.
+  - Expect about 1.7 MB for three.js plus a few addons. That's fine for a local file.
+  - Deliver `index.html` together with `build.mjs` and the app source, so the file can
+    be rebuilt.
+  Treat every other library the same way: exact npm version, ESM build inlined under its
+  bare specifier (GSAP 3.12.5, Lenis 1.1.13, cannon-es 0.20.0, …).
+- Write the inlining instruction into the prompt itself. The executing model never sees
+  this file, so a bare "inline three.js" isn't enough; use the standard line in the
+  templates. That line (about 60 words) doesn't count toward the length bands in §11.
+- The definition of done includes an offline check: with the network blocked, the page
+  makes zero requests and logs `THREE.REVISION` 160 at startup.
 - Name the renderer: WebGL2 via `THREE.WebGLRenderer`, or WebGPU with a WebGL2 fallback.
   Set `outputColorSpace = SRGBColorSpace`, a named tone mapping (ACES Filmic or AgX),
   and exposure.
@@ -118,6 +137,7 @@ Unless the user says otherwise:
 - `prefers-reduced-motion: reduce`: state what changes (no camera shake, slower or
   static loops, scroll animations become fades).
 - Handle resize. No console errors or warnings.
+- No CDN or remote script, module, or import-map URL anywhere in the file.
 
 For Blender scenes, the equivalent is: Blender version, render engine, sample count,
 resolution, color management, and a Python script that builds the scene.

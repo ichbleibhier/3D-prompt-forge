@@ -29,11 +29,11 @@ IDLE: [breathing Hz, blink interval, look-at behavior, after how many s of no in
 CONTROLS + UI: [Panel position/width; each control with range and default; reset]. [Background, title text + font, panel style]. [Hint text that fades after first interaction]. The panel never covers the HERO; below 700 px it collapses to a button.
 CAMERA: [FOV, distance, height, target; orbit/zoom limits; damping]
 
-TECHNICAL: One index.html, no build step; three.js 0.160.0 via a jsDelivr importmap. [WebGL2 / WebGPU with WebGL2 fallback], sRGB, [AgX/ACES] exposure [n], DPR ≤ 2. [Key/fill/rim one-liner; env map]. [Shadow approach]. Pointer Events (mouse + touch), touch-action: none. 60 fps; if under 55, cut [first thing]. prefers-reduced-motion: [what changes].
+TECHNICAL: One index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source. [WebGL2 / WebGPU with WebGL2 fallback], sRGB, [AgX/ACES] exposure [n], DPR ≤ 2. [Key/fill/rim one-liner; env map]. [Shadow approach]. Pointer Events (mouse + touch), touch-action: none. 60 fps; if under 55, cut [first thing]. prefers-reduced-motion: [what changes].
 
 AVOID
 [4–8 one-line items from failure-modes.md, adapted.]
 
 DONE WHEN
-Open it in a browser; screenshot idle, mid-[verb 1], mid-[verb 2], and at 390×844. Console has zero errors or warnings. Exercise every interaction with mouse and simulated touch. [2–4 toy-specific checks: volume ±5%, rest within n s, no interpenetration from 3 angles, contact shadow present]. Average fps ≥ 55 over 10 s of play. Fix and repeat until all pass; deliver with screenshots and one line per check.
+Open it in a browser; screenshot idle, mid-[verb 1], mid-[verb 2], and at 390×844. Console has zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup. Exercise every interaction with mouse and simulated touch. [2–4 toy-specific checks: volume ±5%, rest within n s, no interpenetration from 3 angles, contact shadow present]. Average fps ≥ 55 over 10 s of play. Fix and repeat until all pass; deliver with screenshots and one line per check.
 ```

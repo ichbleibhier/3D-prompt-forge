@@ -44,7 +44,7 @@ ACCURACY NOTE
 [The facts the animation depends on, stated plainly, so the executing model doesn't invent physics. Flag simplifications to show on screen.]
 
 TECHNICAL
-- One self-contained index.html. three.js 0.160.0 via a jsDelivr importmap.
+- One self-contained index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
 - Renderer: [WebGL2 / WebGPU with fallback]. DPR capped at 2.
 - `window.renderAt(t)` / `window.seek(t)` draws any moment from t alone; seeded randomness only. [fps], [length] s.
 - Keyboard: Space play/pause, ←/→ previous/next beat. Controls work with mouse and touch (44 px minimum targets).
@@ -59,7 +59,7 @@ Before delivering:
 1. Screenshot the midpoint of every beat.
 2. Confirm every label is readable, unoccluded, and points at the right part.
 3. Seek to random times out of order; frames match sequential playback.
-4. Read the console: zero errors or warnings.
+4. Read the console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
 5. Re-read the ACCURACY NOTE; check every beat against it.
 6. Test at 1440×900 and 390×844; labels reflow and stay readable.
 Fix anything that fails, repeat, then deliver with screenshots and a one-line result per check.

@@ -45,7 +45,7 @@ SOUND (optional)
 [Web Audio synthesized: jump, hit, pickup, death, music loop. Starts after first input. Mute key.]
 
 TECHNICAL
-- One self-contained index.html. three.js 0.160.0 via a jsDelivr importmap; [cannon-es 0.20.0 / custom collision].
+- One self-contained index.html, three.js 0.160.0, [cannon-es 0.20.0 / custom collision]. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source. [If cannon-es: install cannon-es@0.20.0 and inline its ESM build under `cannon-es` the same way.]
 - Renderer: [WebGL2 / WebGPU with fallback]. DPR capped at 2.
 - Fixed-timestep simulation at 60 Hz with interpolation for rendering; the same gameplay at 30, 60, and 144 Hz displays.
 - Seeded PRNG for spawns, so a `?seed=N` reproduces a run.
@@ -61,7 +61,7 @@ Before delivering:
 1. Play through the core loop at least [3] rounds using scripted inputs: [start, move, attack, collect, take damage, die, restart].
 2. Screenshot: start screen, mid-round with enemies on screen, a hit moment, game over.
 3. Confirm with [?debug=1]: player can't leave the WORLD, enemies don't stack inside each other, colliders match visuals.
-4. Read the console: zero errors or warnings.
+4. Read the console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
 5. Test touch controls at 390×844 and keyboard at 1440×900.
 6. [Game-specific balance checks: round lasts N–M s for an average player; first death not before N s.]
 Fix anything that fails, repeat, then deliver with screenshots and a one-line result per check.

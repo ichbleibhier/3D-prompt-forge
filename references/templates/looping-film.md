@@ -45,7 +45,7 @@ SOUND (optional)
 [Web Audio, synthesized only (oscillators + noise), starts on first click (autoplay policy). Hits keyed to exact frames: f[n] [sound], f[n] [sound]. A mute toggle.]
 
 TECHNICAL
-- One self-contained index.html. three.js 0.160.0 via a jsDelivr importmap.
+- One self-contained index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
 - Renderer: [WebGL2 / WebGPU with fallback]. sRGB output, DPR capped at 2.
 - 60 fps real-time playback on a mid-range laptop at the given resolution.
 - prefers-reduced-motion: [show a still at frame [n] with a play button].
@@ -59,7 +59,7 @@ Before delivering:
 1. Render frames [0, quarter, half, three-quarter, last] via ?frame=N and screenshot each.
 2. Compare frame 0 and frame [frames]: pixel difference must be under 0.5%. Also compare frames [frames−1] and 0 for a smooth seam.
 3. Call renderAt(t) for the same t twice, out of order; both render the same pixels.
-4. Read the console: zero errors or warnings.
+4. Read the console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
 5. [Film-specific checks: feet planted during contact beats, no part intersects another, every beat lands at its timestamp ±1 frame, nothing floats.]
 Fix anything that fails, repeat, then deliver with the frames and a one-line result per check.
 ```

@@ -36,7 +36,7 @@ IDLE: breathing 1.02× at 0.2 Hz, blink every 4–7 s, head tilts 5° toward the
 CONTROLS + UI: right-docked 240 px panel, white 70%, 16 px radius: Softness (0.1–1.0, default 0.35), Reset. Title "Sloth, Squeezable" top-left in "Nunito" 700 28 px, PALETTE eye patches. Hint "squeeze · hold to hug · boop the nose" fades after first use. The panel never covers the HERO; below 700 px it becomes a gear button.
 CAMERA: FOV 32°, 1.9 m away, aimed at the chest; orbit ±50°, zoom 1.3–2.6 m.
 
-TECHNICAL: One index.html, no build step; three.js 0.160.0 via a jsDelivr importmap. WebGL2, sRGB, AgX exposure 1.0, DPR ≤ 2. Warm key #FFE7CC 45° left, fill 0.35×, rim #DDEBFF; RoomEnvironment 0.5. Pointer Events, touch-action: none. 60 fps; if under 55, cut the cage to 500 particles. prefers-reduced-motion: no head-follow, hearts fade in place.
+TECHNICAL: One index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source. WebGL2, sRGB, AgX exposure 1.0, DPR ≤ 2. Warm key #FFE7CC 45° left, fill 0.35×, rim #DDEBFF; RoomEnvironment 0.5. Pointer Events, touch-action: none. 60 fps; if under 55, cut the cage to 500 particles. prefers-reduced-motion: no head-follow, hearts fade in place.
 
 AVOID
 - Scaling the whole mesh to fake squeeze; deform the cage locally.
@@ -46,7 +46,7 @@ AVOID
 - Washed-out light: ambient ≤ 0.1, shadow side near 50%.
 
 DONE WHEN
-Open it in a browser; screenshot idle, mid-squeeze, mid-hug with hearts, and at 390×844. Console has zero errors or warnings. Exercise all three interactions with mouse and simulated touch. Volume stays within ±5% on a hard squeeze; rest within 1.2 s; no interpenetration from three orbit angles; contact shadow present. Average fps ≥ 55 over 10 s of play. Fix and repeat until all pass; deliver with screenshots and one line per check.
+Open it in a browser; screenshot idle, mid-squeeze, mid-hug with hearts, and at 390×844. Console has zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup. Exercise all three interactions with mouse and simulated touch. Volume stays within ±5% on a hard squeeze; rest within 1.2 s; no interpenetration from three orbit angles; contact shadow present. Average fps ≥ 55 over 10 s of play. Fix and repeat until all pass; deliver with screenshots and one line per check.
 ```
 
 **Follow-up revisions**
@@ -121,7 +121,7 @@ RESPONSIVE AND ACCESSIBILITY
 - If WebGL fails, a static radial gradient from surface to background sits behind the text.
 
 PERFORMANCE
-- One self-contained index.html. three.js 0.160.0 and Lenis 1.1.13 via a jsDelivr importmap.
+- One self-contained index.html, three.js 0.160.0 and Lenis 1.1.13. No CDN: `npm install three@0.160.0 lenis@1.1.13`, then a build.mjs inlines node_modules/three/build/three.module.js, every addon used (examples/jsm) and the ESM build of Lenis (specifier `lenis`), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
 - WebGL2, DPR capped at 2 (1.5 below 768 px). All geometry procedural; no external models.
 - Render on demand while idle; pause when the tab is hidden. 60 fps while scrolling.
 
@@ -139,7 +139,7 @@ Open index.html in a browser and, before delivering:
 1. At 1440×900, screenshot every section at sectionProgress 0.5.
 2. At 390×844, screenshot the same.
 3. Scroll to the bottom and back; screenshot section 4 at 0.5 on the way down and on the way up and confirm they match.
-4. Console: zero errors or warnings.
+4. Console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
 5. Check headline legibility at each section, contrast ≥ 4.5:1, "Order for pickup" clickable, no layout shift after fonts load, reduced-motion mode shows end-states.
 6. Average fps during a full scroll ≥ 55.
 Fix anything that fails, repeat, then deliver with screenshots and a one-line result per check.
@@ -209,7 +209,7 @@ SOUND (optional)
 Web Audio, synthesized, starts on first click. Broom swish (bandpassed noise, 0.4 s) at f22, f52, f82, f112. Sigh (filtered noise, 0.6 s) at f150. Wind (low noise rising over 1 s) at f165. Leaf rustle at f190. Mute toggle.
 
 TECHNICAL
-- One self-contained index.html. three.js 0.160.0 via a jsDelivr importmap.
+- One self-contained index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
 - WebGL2, sRGB output, DPR capped at 2. 60 fps real-time playback.
 - Leaves as one InstancedMesh.
 - prefers-reduced-motion: show frame 150 as a still with a play button.
@@ -229,7 +229,7 @@ Before delivering:
 1. Render frames 0, 60, 120, 150, 190, 239, 240 via ?frame=N and screenshot each.
 2. Frame 0 vs. frame 240: pixel difference under 0.5%. Frame 239 → 0 looks like continuous motion.
 3. renderAt(3.1), renderAt(7.0), renderAt(3.1) renders the same pixels for both 3.1 calls.
-4. Console: zero errors or warnings.
+4. Console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
 5. Step frames 15–135: feet don't slide during strokes; broom doesn't clip the ground or legs; each stroke moves its leaves.
 6. All leaves land with contact shadows by frame 216.
 Fix anything that fails, repeat, then deliver with the frames and a one-line result per check.
@@ -296,7 +296,7 @@ SOUND (optional)
 Web Audio synthesized: horn on spawn, bell on dock, low thud plus noise on crash, gentle wave bed. Starts after first input. M toggles mute.
 
 TECHNICAL
-- One self-contained index.html. three.js 0.160.0 via a jsDelivr importmap; custom circle colliders, no physics engine.
+- One self-contained index.html, three.js 0.160.0; custom circle colliders, no physics engine. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
 - WebGL2, DPR capped at 2.
 - Fixed 60 Hz simulation with interpolated rendering; the same gameplay on 30, 60, and 144 Hz displays.
 - Seeded PRNG for rocks, spawns, and fog; ?seed=N reproduces a run.
@@ -317,7 +317,7 @@ Before delivering:
 1. Play 3 full rounds with scripted input: aim at incoming boats, use the narrow beam, let one boat crash, dock at least 5.
 2. Screenshot the start screen, 30 s in, 150 s in with fog, a crash moment, and game over.
 3. With ?debug=1, confirm boats can't leave the WORLD, never overlap, and colliders match visuals.
-4. Console: zero errors or warnings.
+4. Console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
 5. Test touch at 390×844 and mouse at 1440×900.
 6. Balance: an idle player loses in 50–80 s; a steady player docks 12+ boats per round.
 Fix anything that fails, repeat, then deliver with screenshots and a one-line result per check.

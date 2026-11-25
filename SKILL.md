@@ -119,6 +119,7 @@ Run this checklist against your draft. Fix misses before replying.
 - [ ] Interactive work lists every interaction as a verb with its visual result, plus
       idle behavior, controls, and UI look.
 - [ ] Technical block: single HTML file (unless told otherwise), pinned versions,
+      no CDN: libraries npm-installed and inlined via the standard line in the template,
       renderer named, mouse + touch stated (for every type), 60 fps target,
       prefers-reduced-motion.
 - [ ] 4–8 AVOID lines specific to this type.
