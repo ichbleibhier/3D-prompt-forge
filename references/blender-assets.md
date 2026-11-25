@@ -10,14 +10,49 @@ water surfaces, particles) and for simple shapes.
 The page stays a single offline `index.html`. Blender writes `.glb` files, and
 `build.mjs` embeds them in the HTML as base64, next to the inlined three.js.
 
+## When to ask about Blender
+
+Ask only when **both** are true. Otherwise don't mention Blender at all.
+
+1. **The user wants it very detailed.** Their words say so ("very detailed", "realistic",
+   "lifelike", "high-detail", "intricate", "make it detailed"), or they picked High or
+   Maximum. Cheapest and Balanced never use Blender.
+2. **The idea contains things that need Blender**: organic or hand-made-looking forms
+   that code builds poorly. These include coral and reefs, rocks and cliffs, trees,
+   driftwood and plants, creatures, animals and character bodies, food, sculpted
+   props, furniture, detailed vehicles, and ruins or buildings with wear. Things that
+   don't need Blender: simple or geometric shapes, abstract scenes, text and UI,
+   particles, water surfaces, and anything that deforms live (soft bodies, jelly,
+   cloth, tentacle chains). Those stay in code even at Maximum.
+
+If the request already says to use Blender ("model it in Blender") or not to ("code
+only"), follow it and don't ask.
+
+When both are true, ask, naming the specific parts:
+
+```
+This has detailed parts that would look much better modeled in Blender: [the coral,
+the rocks, the octopus's body]. Should the prompt have the coding model use Blender
+for them?
+a. Yes (recommended): model them in Blender and embed them in the page. If Blender
+   isn't available, it builds them in code instead.
+b. No: build everything in code.
+```
+
+Use a multiple-choice question tool if one is available. Timing:
+- The user's words already say "very detailed" (so the tier is High): ask only this question.
+- The tier isn't known and the words don't say detailed: ask only the tier question. If
+  the answer is High or Maximum and the idea has parts that need Blender, ask this one
+  as a short follow-up before writing.
+- The tier is Cheapest or Balanced: never ask.
+
 ## When to include it
 
-- Tier is High or Maximum **and** the user answered that the executing model can use
-  Blender ("yes" or "not sure"). See the extra question in `quality-tiers.md`.
-- Never at Cheapest or Balanced.
-- With "not sure", include it with its fallback; the prompt works either way.
-- The prompt must still describe every asset well enough to build procedurally, because
-  the fallback uses that description.
+- The Blender test above passed, the tier is High or Maximum, and the user said yes
+  (or asked for Blender themselves).
+- Use Blender only for the parts named in the question; everything else stays in code.
+- Always keep the fallback: the prompt must still describe every Blender asset well
+  enough to build in code, because that's what happens when Blender is missing.
 
 ## The block to put in the prompt
 

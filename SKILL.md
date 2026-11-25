@@ -21,7 +21,7 @@ Read these as needed. Do not paste them into the output.
 |---|---|
 | `references/quality-tiers.md` | Every time, before writing. The tier question, and what each tier changes. |
 | `references/principles.md` | Every time, before writing. The rules every generated prompt follows. |
-| `references/blender-assets.md` | High or Maximum browser builds where the user said Blender is available or wasn't sure. |
+| `references/blender-assets.md` | When a browser build is very detailed and contains organic forms (coral, rocks, creatures). The test for asking about Blender, and the prompt section. |
 | `references/templates/<type>.md` | After classifying. The skeleton for that type. |
 | `references/failure-modes.md` | When writing the AVOID section. Pick 4–8 lines for the type. |
 | `references/examples.md` | When unsure about tone, length, or level of detail. |
@@ -55,9 +55,13 @@ Always ask which quality tier the prompt should aim for (Cheapest, Balanced, Hig
 Maximum) before writing it, unless the user's words already pick one. The exact
 wording, the skip rules and what each tier changes are in `references/quality-tiers.md`.
 Use a multiple-choice question tool if one is available; otherwise send a numbered list.
-For browser builds, ask in the same message whether the executing model can use Blender;
-at High or Maximum, a yes or not-sure adds an `ASSETS (Blender)` section
-(`references/blender-assets.md`).
+If the request is very detailed ("very detailed", "realistic", or a High or Maximum
+tier) **and** it contains things that need Blender (coral, rocks, creatures, characters,
+plants, food), ask whether to use Blender for those parts. Name them in the question.
+If the request doesn't say detailed but the user then picks High or Maximum, ask it as a
+short follow-up before writing. The test, timing and wording are in
+`references/blender-assets.md`. A yes adds an `ASSETS (Blender)` section. When the
+test doesn't pass, don't mention Blender.
 
 Decide almost everything else yourself. Strong defaults beat a round-trip.
 
@@ -125,7 +129,8 @@ Run this checklist against your draft. Fix misses before replying.
 
 - [ ] Tier asked (or taken from the user's words) and named first in `Decisions:`;
       scope, rendering, checks and length match it.
-- [ ] High/Maximum with Blender yes or not sure: an `ASSETS (Blender)` section with
+- [ ] Blender asked about only when the request is very detailed and has organic
+      parts; if the user said yes: an `ASSETS (Blender)` section with
       per-asset budgets, the code fallback, and the asset checks in the definition of done.
 - [ ] BRAND block at the top; later sections use the names only.
 - [ ] Colors are hex, sizes have units, times are in seconds (and frames for film).
