@@ -119,6 +119,22 @@ Just ask:
 - "Improve this prompt for a Three.js robot animation: …"
 - "What should I tell Claude Code to make a Blender diorama of a tiny bookshop?"
 
+## Showcase site
+
+`docs/index.html` is a one-page site for the skill: a pixel-art anvil you can strike,
+the quality levels shown as forge heat, and the four worked examples with copy buttons.
+It's a single file with three.js bundled in (no CDN), so GitHub Pages can serve it
+straight from the `docs/` folder (Settings → Pages → Deploy from branch → `/docs`).
+
+To rebuild it after editing `references/examples.md` or anything in `site/`:
+
+```bash
+cd site && npm install && node build.mjs
+```
+
+The site isn't part of the skill: `site/` and `docs/` are left out of the downloadable
+skill ZIP.
+
 ## Repository layout
 
 ```
@@ -136,6 +152,8 @@ references/
     blender-scene.md
   failure-modes.md            shortcuts models take, and what to ask for instead
   examples.md                 four complete worked examples
+site/                         source for the showcase site (not part of the skill)
+docs/index.html               the built showcase site
 ```
 
 ## Originality

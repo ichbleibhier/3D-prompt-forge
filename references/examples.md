@@ -1,336 +1,359 @@
 # Worked examples
 
-Four original examples showing the full output for a one-line input, all at the
-Balanced tier (the user answered "defaults" to the tier question). Use them to
-calibrate tone, density, and length. Don't reuse their content; reuse their shape.
+Four original examples, each showing a different path through the skill: the user's
+one-line input, the questions the skill asks, the answers, and the full output. Use them
+to calibrate tone, density, and length. Don't reuse their content; reuse their shape.
+
+| # | Type | Tier | Path shown |
+|---|---|---|---|
+| 1 | Interactive toy | Balanced | Tier question answered with "defaults" |
+| 2 | Scroll website | High | Tier question, then the Blender follow-up (food is organic) |
+| 3 | Looping film | Balanced | Tier question; seamless 8 s loop with a moving subject |
+| 4 | Playable game | Cheapest | "quick prototype" picks the tier, so no question |
 
 ---
 
-## Example 1: plush animal toy
+## Example 1: interactive toy (Balanced)
 
-**Input:** "a plush sloth I can hug"
+**Input:** "a knitted wool cactus I can squeeze and pluck"
+
+**Skill asks:** the tier question. The idea isn't described as detailed, and Balanced
+never uses Blender, so there's no Blender question.
+
+**User:** "defaults"
 
 **Output:**
 
-Decisions: Balanced tier; interactive toy; 0.6 m seated plush on a branch stub; fabric look via sheen; "hug" becomes press-and-hold so it works with one finger; WebGL2 with a soft-body cage.
+Decisions: Balanced tier; interactive toy; 0.36 m knitted cactus in a terracotta pot; "pluck" pulls a felt flower off on a stretching yarn stem, and a new bud grows back; knit stitches from a generated normal map plus wool sheen; WebGL2.
 
 ```text
-Build a single-file interactive 3D plush toy: a seated sloth you can squeeze, hug, and boop. It should feel like a soft handmade plush.
+Build a single-file interactive 3D toy: a knitted wool cactus in a little pot to squeeze, pluck and boop. A handmade gift from someone who knits.
 
 BRAND
-HERO:    seated plush sloth, 0.6 m, pear-shaped, head 0.5 of height, long arms past the belly
-PALETTE: fur #A88B6F, face mask #E8D8C2, eye patches #5B4636, nose #2E2420, background #EEF1E8, accent #7FA66B
-SET:     a rounded branch stub (0.25 m) on a PALETTE background cyclorama
-PROPS:   a 0.12 m felt leaf in PALETTE accent, held in the left arm
-ACCENTS: soft contact shadow; three felt hearts on a long hug
+HERO:    knitted cactus, 0.36 m with pot: 0.24 m column, two arms (0.09, 0.07 m) curving up, 14 yarn-tuft spines, a 0.06 m felt flower on top
+PALETTE: wool #6E9A5B, wool shadow #3F5E3A, wool highlight #A8C98F, flower #F2A3B3, pot #C8643C, background #F4EDE2
+SET:     a 0.11 m PALETTE pot on a pale wooden shelf
+ACCENTS: contact shadow; 12 wool fluff specks when the flower pops off
 
-OBJECT: one continuous mesh (smooth-union SDF, marching cubes at 128³), no seams. MeshPhysicalMaterial roughness 0.9, sheen 1.0, sheenRoughness 0.5, sheenColor PALETTE face mask; fur normal noise at 400/m, strength 0.35. Glossy bead eyes (roughness 0.15) in embroidered patches.
+OBJECT: one smooth-union SDF mesh, no seams. Knit: a 512 px canvas normal map of V-stitches, 7 per 10 cm, strength 0.8. MeshPhysicalMaterial roughness 0.95, sheen 1.0, sheenRoughness 0.45, sheenColor PALETTE wool highlight; 6 fuzz shells 1.5 mm apart. Closed stitched eyes (^ ^) in PALETTE wool shadow. Flower: 5 felt petals on an 8-segment yarn stem.
 
-PHYSICS: PBD on an 800-particle cage skinned to the mesh, fixed 1/120 s substeps, bottom pinned to the SET. Volume within ±5%. Stiffness body 0.35, arms 0.2; damping 0.6; rest in 1.2 s with one overshoot.
+PHYSICS: PBD on a 700-particle cage, fixed 1/120 s substeps, base pinned. Volume within ±5%. Stiffness 0.4 (arms 0.3), damping 0.55, rest in 1.0 s.
 
 INTERACTIONS
-SQUEEZE (drag / pinch): compresses up to 30% along the drag, bulges sideways, eyes squint.
-HUG (hold 0.8 s): arms wrap the belly over 0.5 s; after 2 s the hearts rise 0.3 m and fade over 1.2 s.
-BOOP (tap nose): 1.5 cm dent, head bobs back 6°, a 60 ms synthesized felt "thup".
-IDLE: breathing 1.02× at 0.2 Hz, blink every 4–7 s, head tilts 5° toward the pointer.
+SQUEEZE (drag / pinch): compresses up to 30%, bulges, arms lift 12°, eyes pop open.
+PLUCK (drag the flower up): the stem stretches up to 6 cm, then pops off with a soft synthesized "tup" and the fluff burst.
+DROP (release it): within 8 cm of the top it snaps back on; elsewhere it falls and bounces twice. After 4 s a new bud grows in over 1.2 s.
+BOOP (tap a tuft): flattens 70%, springs back with 3 oscillations at 5 Hz.
+IDLE: after 3 s, sway 1.5° at 0.2 Hz.
 
-CONTROLS + UI: right-docked 240 px panel, white 70%, 16 px radius: Softness (0.1–1.0, default 0.35), Reset. Title "Sloth, Squeezable" top-left in "Nunito" 700 28 px, PALETTE eye patches. Hint "squeeze · hold to hug · boop the nose" fades after first use. The panel never covers the HERO; below 700 px it becomes a gear button.
-CAMERA: FOV 32°, 1.9 m away, aimed at the chest; orbit ±50°, zoom 1.3–2.6 m.
+CONTROLS + UI: right 220 px panel, white 70%: Squish (0.1–1.0, default 0.4), Reset. Title "Wool Cactus" top-left, "Nunito" 800 28 px, PALETTE wool shadow. Hint "squeeze · pluck · boop" fades after first use. The panel never covers the HERO.
+CAMERA: FOV 30°, 1.3 m away, 12° down; orbit ±55°, zoom 0.9–1.8 m.
 
-TECHNICAL: One index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source. WebGL2, sRGB, AgX exposure 1.0, DPR ≤ 2. Warm key #FFE7CC 45° left, fill 0.35×, rim #DDEBFF; RoomEnvironment 0.5. Pointer Events, touch-action: none. 60 fps; if under 55, cut the cage to 500 particles. prefers-reduced-motion: no head-follow, hearts fade in place.
+TECHNICAL: One index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source. WebGL2, sRGB, AgX, DPR ≤ 2. Warm key #FFE9CC 45° left, fill 0.3×, cool rim; no ambient. Pointer Events (mouse + touch), touch-action: none. 60 fps; if under 55, use 4 fuzz shells. prefers-reduced-motion: no sway, the bud appears without growing.
 
 AVOID
-- Scaling the whole mesh to fake squeeze; deform the cage locally.
-- Visible separate spheres and cylinders for body parts.
-- Arms passing through the belly during a hug.
-- A plastic look: no specular hotspots on fabric.
-- Washed-out light: ambient ≤ 0.1, shadow side near 50%.
+- Scaling the whole mesh to fake a squeeze.
+- A smooth plastic cactus; the knit must read at 1.3 m.
+- The stem as a rigid stick.
+- The flower sinking into or floating above the shelf.
+- Seams where the arms meet the column.
+- Washed-out light: shadow side near 45%.
 
 DONE WHEN
-Open it in a browser; screenshot idle, mid-squeeze, mid-hug with hearts, and at 390×844. Console has zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup. Exercise all three interactions with mouse and simulated touch. Volume stays within ±5% on a hard squeeze; rest within 1.2 s; no interpenetration from three orbit angles; contact shadow present. Average fps ≥ 55 over 10 s of play. Fix and repeat until all pass; deliver with screenshots and one line per check.
+Open it in a browser; screenshot idle, mid-squeeze, mid-pluck, the dropped flower, and 390×844. Zero console errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup. Exercise every interaction with mouse and simulated touch. Volume within ±5%; rest within 1.0 s; the bud regrows; contact shadows under pot and flower; fps ≥ 55 over 10 s. Fix and repeat until all pass, then deliver screenshots.
 ```
 
 **Follow-up revisions**
 
 ```text
-If the sloth looks like smooth clay instead of fabric: raise fur normal strength to 0.6, add a second noise layer at 1,200/m, and set sheenRoughness to 0.35 so the rim catches a soft halo of PALETTE face mask.
+If the knit doesn't read and it looks like green felt: raise the stitch normal strength to 1.3, enlarge the stitches to 5 per 10 cm, and darken the grooves toward PALETTE wool shadow by 20%.
 ```
 ```text
-If the hug looks stiff: delay the forearms 4 frames behind the upper arms, overshoot the wrap by 6° and settle over 0.3 s, and dent the belly 5% where the arms land.
+If plucking feels like nothing happened: add a 4-frame hold at full stretch before the pop, kick the cactus back 3° on release, and scatter the fluff 0.15 m instead of 0.08 m.
 ```
 
-Best run in: a coding agent that can open a browser and take screenshots, since the volume and interpenetration checks need visual verification.
+Best run in: a mid-tier coding model in an agent that can open a browser, take screenshots and simulate pointer drags.
 
 ---
 
-## Example 2: scroll website for a fictional local business
+## Example 2: scroll website (High, with Blender)
 
-**Input:** "website for a neighborhood bakery"
+**Input:** "a website for a ramen stall at a night market"
+
+**Skill asks:** the tier question.
+
+**User:** "3" (High)
+
+**Skill asks next:** the Blender question, because the tier is High and food is an
+organic form that code builds poorly.
+
+> This has detailed parts that would look much better modeled in Blender: the bowl,
+> the chashu, the soft egg, the paper lantern. Should the prompt have the coding model
+> use Blender for them?
+> a. Yes (recommended): model them in Blender and embed them in the page. If Blender
+>    isn't available, it builds them in code instead.
+> b. No: build everything in code.
+
+**User:** "a"
 
 **Output:**
 
-Decisions: Balanced tier; scroll website; fictional "Marrow Lane Bakehouse" in an invented riverside town; HERO is a sourdough loaf that goes from dough to baked as you scroll; all copy in a SITE config so a real bakery can swap it in; Lenis for smoothing.
+Decisions: High tier; scroll website; fictional "Lantern Alley Ramen" at an invented riverside night market, all copy in a SITE config so a real stall can swap in; the HERO bowl assembles as you scroll (broth, noodles, toppings); Blender for the bowl, toppings and lantern, code for broth, noodles and steam; polish checklist and throttled fps check.
 
 ```text
-Build a single-page scroll website for Marrow Lane Bakehouse, a fictional neighborhood sourdough bakery on a corner in the riverside town of Ellery. It should feel like walking in at 6 a.m.: warm, floury, quiet.
+Build a single-page scroll website for Lantern Alley Ramen, a fictional ramen stall at the Thursday-to-Saturday night market in the riverside town of Port Halden. It should feel like stepping out of the cold into steam and lantern light.
 
 BRAND
-BRAND NAME: Marrow Lane Bakehouse — "Slow bread, early mornings."
-HERO:       a round sourdough boule, 0.24 m wide when baked, with a single curved ear score
-PALETTE:    background #F6EFE4, surface #EBDDC8, ink #2B2118, muted ink #6E5E4E, accent #C2602E (crust), accent-2 #3F5A4C (shop door green)
-TYPE:       headings "Fraunces" 600, body "Inter" 400 17 px / 1.6, labels "Inter" 600 12 px, tracking 0.12em uppercase
-SET:        a worn wooden counter (2 m × 0.8 m) under one warm pendant light, background falling off to PALETTE background
-PROPS:      a linen-lined proofing basket, a bench scraper, a small scatter of flour, a paper bag with a twine tie
-ACCENTS:    drifting flour motes (300, seeded), faint film grain 3%
-VOICE:      plain, warm, unhurried. "We start at four so you don't have to."
+BRAND NAME: Lantern Alley Ramen — "Broth since noon. Bowls till midnight."
+HERO:       a 0.2 m glazed ramen bowl that fills as you scroll: broth, noodles, then chashu, soft egg, nori and scallions
+PALETTE:    night #14121A, counter #5A3A26, ink #F4EBDD, muted ink #A79A88, lantern #F2994A, lantern glow #FFD08A, broth #C98A3D, glaze #2F4A5C, scallion #7DB35A, accent #E2463A
+TYPE:       headings "Bricolage Grotesque" 700, body "Source Sans 3" 400 18/1.6 px, prices "JetBrains Mono" 500 15 px
+SET:        a worn wooden counter (1.6 × 0.5 m) under one paper lantern; the night market blurred behind
+PROPS:      chopsticks, a ladle, a paper lantern (0.4 m), a stool
+ACCENTS:    seeded steam wisps, 120 blurred market lights, 2% film grain
+VOICE:      warm, short sentences, a little proud. "Fourteen hours of bones and kombu. You'll taste every one."
 
 CONCEPT
-The HERO bakes as you scroll: a pale ball of dough in the first section becomes a proofed round, then a scored loaf, then a crackling crust, then sits in a paper bag at the counter by the end.
+The page builds one bowl. Each section adds a layer; by the menu it's the finished bowl. Then the camera pulls back to the stall so you know where to find it.
 
 SECTIONS
-1. Arrival — 100vh. Shows: BRAND NAME, tagline, hours line, "Order for pickup" button. 3D: HERO as a pale dough ball (#EFE3D0, roughness 0.8) on the counter, pendant light swaying 2°.
-2. The Starter — 120vh. Shows: a short paragraph on the 11-year-old starter. 3D: camera dollies from 1.4 m to 0.7 m; dough slowly rises 1.0→1.18× height, surface bubbles appear (displacement noise, seeded).
-3. Shaping and Scoring — 120vh. Shows: three-step text list. 3D: HERO moves into the proofing basket, then out; the bench scraper glides in; a score line draws across the top (a displaced groove growing 0→100% over sectionProgress 0.4–0.8).
-4. The Bake — 140vh. Shows: "Forty-five minutes at 250°C" in large type. 3D: lighting shifts to oven orange #FF8A3D at 1.6× intensity; crust color lerps dough→PALETTE accent; the ear lifts 0.015 m; heat shimmer behind the HERO.
-5. The Menu — auto height. Shows: 6 loaves and pastries as DOM cards with price and days baked. 3D: HERO rests at the right third, camera static; a slow 6° turntable driven by scroll.
-6. Visit — 100vh. Shows: address, map link, hours table, phone. 3D: HERO drops into the paper bag; the twine bow ties (0.6 s of sectionProgress).
-7. Footer — 40vh. Small type, newsletter field, copyright line.
+1. Open Late — 100vh. Shows: BRAND NAME, tagline, "Thu–Sat · 6 pm to midnight", "Find the stall" button. 3D: the empty HERO on the counter under the lantern, bokeh market lights drifting 2 cm/s.
+2. The Broth — 130vh. Shows: the VOICE line and a paragraph on the broth. 3D: the ladle tilts 50° and pours a broth stream (tube, 8 mm) while the broth surface rises from 0 to 60% of the bowl depth; fat droplets catch the lantern; steam grows from 4 to 18 wisps.
+3. The Noodles — 120vh. Shows: "Made here every morning, rested a day." 3D: chopsticks lower a bundle of 40 noodles (code curves, 2.5 mm thick) into the broth; at sectionProgress 0.6–0.9 they lift a 0.12 m noodle pull, broth dripping, then lower it back.
+4. On Top — 160vh, four stops at 0.12 / 0.37 / 0.62 / 0.87. Shows: one SITE.toppings card per stop (name, one line, origin). 3D: each topping drops 8 cm into place with a 2 cm splash ring and a 0.1 s squash: two chashu slices, an egg split to show the jammy yolk, a nori sheet tucked at the back rim, a scatter of 60 scallion rings.
+5. The Menu — auto height. Shows: 5 bowls from SITE.menu (name, broth, price, heat 0–3 drawn as small inline-SVG chilies). 3D: the finished HERO at the right third, turning 12° across the section.
+6. Find Us — 100vh. Shows: an inline-SVG map of the market's rows with stall 14 highlighted in PALETTE accent, hours, "Cash and cards." 3D: the camera pulls back 2.5 m to the stall front: counter, lantern, stool, a cloth curtain swaying.
+7. Footer — 40vh. Small type, social links from SITE, copyright line.
 
 SCROLL SYSTEM
-- Lenis 1.1.13 smooths native scroll (lerp 0.1). One loop computes `progress` (0–1, whole page) and `sectionProgress[i]` (0–1) from section offsets.
-- DOM transforms and every 3D value are pure functions of these numbers each frame. No GSAP ScrollTrigger timelines, no IntersectionObserver tweens.
-- The canvas is position: fixed, full viewport, behind the content; text sits in a 46ch column on the left on desktop.
-- Scrolling up plays every moment backward exactly. Wheel, trackpad, touch, and keyboard scrolling all feed the same value.
+- Lenis 1.1.13 (lerp 0.1) produces `progress` and `sectionProgress[i]`, both 0–1. Wheel, trackpad, touch and keyboard scrolling all feed it.
+- DOM and 3D values are pure functions of these each frame. No ScrollTrigger timelines or IntersectionObserver tweens.
+- A fixed full-viewport canvas behind the content. Scrolling up plays everything backward, including toppings lifting out and broth draining.
 
 3D MOMENTS AND TRANSITIONS
-- Each section's keyframes are defined as arrays of [sectionProgress, value] with smoothstep between them.
-- Section transitions overlap by 15% of the incoming section, so the camera never stops dead.
-- The crust color and lighting in section 4 return to dough tones if the user scrolls back up.
+- Each section's keyframes are [sectionProgress, value] arrays with smoothstep between; transitions overlap 15% into the next section.
+- Steam: 3D noise sampled on scroll progress and time, so it rises continuously but its amount follows progress.
+- Camera: 0.55 m from the HERO at 35° down for sections 1–5, then the pull-back in section 6.
 
 LOOK
-- Pendant key light #FFD9A8 at 3.0 intensity, 1.1 m above the counter, soft shadows (2048 map, radius 6). Fill from the window side, cool #CFE0F0 at 0.3. No ambient light.
-- AgX tone mapping, exposure 1.05. Counter wood: procedural grain, roughness 0.7. Flour: tiny instanced quads, additive at 0.4.
+- Key: the lantern as a warm point light, PALETTE lantern glow at 4.0, 0.5 m above the bowl, soft shadows (2048 PCF). Cool rim from the market side, #8FA8D9 at 0.6. No ambient light. AgX, exposure 1.05.
+- Broth: MeshPhysicalMaterial roughness 0.05, transmission 0.2, PALETTE broth, with a floating-fat normal map. Noodles roughness 0.4, subsurface-style wrap lighting.
+- Post: GTAO on the counter and bowl, bloom threshold 0.85 strength 0.4 (lantern and droplets only), depth of field focused on the HERO.
+
+ASSETS (Blender)
+- First check for Blender: run `blender --version` (4.2 LTS or newer). If it's missing, try `pip install bpy` in a virtualenv with the Python version bpy supports. If both fail, skip this section, build these assets procedurally as described above, and say so in the delivery note.
+- Write assets/build_assets.py and run it with `blender --background --python assets/build_assets.py` (or plain python with bpy). It starts from bpy.ops.wm.read_factory_settings(use_empty=True), seeds random with 14, and builds every asset from nothing: no downloads, no external textures.
+- Assets: HERO bowl — lathe profile with a foot ring and a glaze drip line at 70% height, inside lighter — 0.2 m — 8,000 tris — PALETTE glaze. PROP_chashu ×2 variants — rolled slice with a baked fat swirl — 6 cm — 2,000 tris. PROP_egg_half — white with a jammy yolk dome — 4 cm — 1,500 tris. PROP_nori — crinkled sheet — 7 × 9 cm — 400 tris. PROP_chopsticks — lacquered, tapered — 0.23 m — 600 tris. PROP_lantern — ribbed paper over 12 wire hoops — 0.4 m — 4,000 tris — PALETTE lantern.
+- Materials: Principled BSDF only (it exports cleanly to glTF); convert PALETTE hex from sRGB to linear before setting Base Color; roughness per asset. Bake any procedural detail you need into 1024 px images packed into the file.
+- Per object: apply all modifiers and transforms, decimate to its triangle budget, set the origin at the base and move it so its lowest point sits at z = 0, name it HERO_* or PROP_*.
+- Export each asset group with bpy.ops.export_scene.gltf(export_format='GLB', export_apply=True, export_yup=True) to assets/*.glb. No Draco compression: its decoder can't be inlined cleanly. Total .glb size at most 8 MB.
+- build.mjs adds three/addons/loaders/GLTFLoader.js (and its imports) to the import map and embeds each .glb as base64 in a `const ASSETS = {...}` object. Load with GLTFLoader.parse() on the decoded ArrayBuffer, never with fetch.
+- Repeat assets with InstancedMesh, varying rotation and ±15% scale with a seeded random.
+- Deliver assets/build_assets.py and the .glb files with index.html, build.mjs and the app source.
 
 CONFIG
-All copy, the menu (name, description, price, days), hours, address, and phone live in `const SITE = {...}` at the top of the script. The DOM is rendered from SITE on load.
+All copy, toppings, the menu (name, broth, price, heat), hours, the map's stall number, and social links live in `const SITE = {...}` at the top; the page renders from it.
 
 RESPONSIVE AND ACCESSIBILITY
-- ≥1200 px: text column left, HERO right of center. 768–1199: HERO centered behind a translucent text card. <768: HERO at 70% scale in the top 45% of the viewport, text below.
-- Semantic header/main/section/footer; each section has an h2. Contrast ≥ 4.5:1 over every 3D state, using a soft PALETTE background scrim behind text where needed.
-- Visible focus rings in PALETTE accent-2. Button and links reachable by keyboard.
-- prefers-reduced-motion: no Lenis, no dolly; each section shows its end-state HERO with a 0.3 s crossfade.
-- If WebGL fails, a static radial gradient from surface to background sits behind the text.
+- ≥1200 px: 44ch text column left, HERO right of center. 768–1199: centered cards on a PALETTE night scrim at 85%. <768: HERO in the top 45% of the viewport at 80% scale, text below.
+- Semantic landmarks, an h2 per section, PALETTE accent focus rings, contrast ≥ 4.5:1 over every state of the scene.
+- prefers-reduced-motion: no smoothing, no camera moves, steam static; each section shows its end state with a 0.3 s crossfade. WebGL failure: a static lantern-glow gradient.
 
 PERFORMANCE
-- One self-contained index.html, three.js 0.160.0 and Lenis 1.1.13. No CDN: `npm install three@0.160.0 lenis@1.1.13`, then a build.mjs inlines node_modules/three/build/three.module.js, every addon used (examples/jsm) and the ESM build of Lenis (specifier `lenis`), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
-- WebGL2, DPR capped at 2 (1.5 below 768 px). All geometry procedural; no external models.
-- Render on demand while idle; pause when the tab is hidden. 60 fps while scrolling.
+- One index.html, three.js 0.160.0 and Lenis 1.1.13. No CDN: `npm install three@0.160.0 lenis@1.1.13`, then a build.mjs inlines node_modules/three/build/three.module.js, every addon used (examples/jsm) and the ESM build of Lenis (specifier `lenis`), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
+- WebGL2, DPR ≤ 2 (1.5 below 768 px). Render on demand when idle; pause when hidden. 60 fps while scrolling.
 
 AVOID
-- Two scroll systems fighting. Everything reads the one smoothed value.
-- One-shot reveal animations that don't reverse.
-- Lorem ipsum or generic labels like "Product 1". Write real copy in the VOICE.
-- A centered hero with three feature cards. Follow the section plan.
-- Floating bread: the HERO always has a contact shadow on the counter or in the basket.
-- Washed-out lighting: no ambient light; the shadow side of the loaf sits near 40% luminance.
-- Text over the busiest part of the scene without a scrim.
+- Two scroll systems fighting; one-shot reveals that don't reverse.
+- Toppings floating above the broth or sinking through the bowl; each rests on the broth surface at its fill height.
+- Broth as an opaque orange disc; it needs the fat droplets, slight transmission and a meniscus at the bowl wall.
+- Noodles as straight cylinders; they curve, overlap and sag.
+- Steam like gray smoke; it's thin, warm and gone by 0.25 m.
+- Lorem ipsum or a centered hero with three feature cards.
+- Washed-out night: no ambient light; everything away from the lantern falls toward PALETTE night.
+- Text over the lantern's glow without a scrim.
 
 DEFINITION OF DONE
 Open index.html in a browser and, before delivering:
-1. At 1440×900, screenshot every section at sectionProgress 0.5.
-2. At 390×844, screenshot the same.
-3. Scroll to the bottom and back; screenshot section 4 at 0.5 on the way down and on the way up and confirm they match.
-4. Console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
-5. Check headline legibility at each section, contrast ≥ 4.5:1, "Order for pickup" clickable, no layout shift after fonts load, reduced-motion mode shows end-states.
-6. Average fps during a full scroll ≥ 55.
-Fix anything that fails, repeat, then deliver with screenshots and a one-line result per check.
+1. Screenshot every section at sectionProgress 0.5 (and section 4 at each stop) at 1440×900 and 390×844.
+2. Scroll to the bottom and back; section 4 at 0.62 matches both ways, toppings included.
+3. Console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
+4. Headlines legible over every state, "Find the stall" scrolls to section 6, no layout shift after fonts load, reduced-motion shows end states.
+5. Blender assets: render a 512 px clay preview of each in Blender before export; in the browser each sits on its surface within 1 mm and matches its brief size within 5%; log triangle counts against budgets.
+6. Polish checklist: the yolk shows a specular glint in section 4; the lantern lights the bowl's inner rim; the broth meniscus is visible; chopstick shadows fall on the counter; steam never covers the headline.
+7. Average fps ≥ 55 during a full scroll, and ≥ 30 with 4× CPU throttling.
+Fix anything that fails, repeat, then deliver screenshots with one line per check.
 ```
 
 **Follow-up revisions**
 
 ```text
-If the bread looks like a smooth orange ball: add crust displacement (noise scale 30/m, amplitude 3 mm), roughness variation 0.55–0.85, and darken the score edges to #7A3A18 so the ear reads.
+If the bowl looks like plastic: lower the glaze roughness to 0.12 with clearcoat 0.8, add a 1 mm unglazed band at the foot ring (roughness 0.9, #B9A58C), and raise the rim light to 0.9.
 ```
 ```text
-If the text is hard to read over the 3D on mobile: move the HERO into the top 40% of the viewport below 768 px and give the text block a PALETTE background scrim at 92% opacity with 24 px padding.
+If the broth reads flat: deepen PALETTE broth to #B5762E toward the center, raise the fat-droplet count to 90, and tilt the lantern light 10° so the droplets catch it.
 ```
 ```text
-If the scroll feels sluggish: raise the Lenis lerp to 0.14 and shorten section 4 to 110vh.
+If the toppings arrive too fast to notice: stretch section 4 to 200vh and hold each topping still for 0.12 sectionProgress after it lands.
 ```
 
-Best run in: a coding agent with a browser it can scroll and screenshot at two widths.
+Best run in: the most capable coding model in an agent with a browser and screenshots, and Blender (or pip-installable bpy) on the same machine.
 
 ---
 
-## Example 3: 8-second looping character film
+## Example 3: 8-second looping character film (Balanced)
 
-**Input:** "a fox sweeping up leaves, looping"
+**Input:** "an 8 second loop of a snail delivering mail"
+
+**Skill asks:** the tier question. A snail is organic, but the request isn't detailed and
+Balanced never uses Blender, so no Blender question.
+
+**User:** "2" (Balanced)
 
 **Output:**
 
-Decisions: Balanced tier; looping film; 1080×1080, 30 fps, 8 s (240 frames); the loop is closed by a gust that re-scatters the swept pile; original stylized fox in a hand-knit scarf; synthesized broom and wind sounds.
+Decisions: Balanced tier; looping film; 1080×1080, 30 fps, 8 s (240 frames); the snail stays centered while a periodic garden-fence set scrolls past, with one mailbox per loop; the letter tips from a satchel on its shell into the slot; original stylized snail.
 
 ```text
-Build a single-file 3D animated loop: a small fox sweeps autumn leaves into a neat pile, sighs with satisfaction, and a gust scatters them back. It should feel like a gentle, slightly funny daily ritual.
+Build a single-file 3D animated loop: a snail mail carrier slides along a fence rail, tips a letter from its satchel into a tiny mailbox, raises the flag and slides on. A slow, proud, slightly comic round.
 
 BRAND
-HERO:    stylized upright fox, 0.7 m tall, head 0.4 of height, big tail (0.45 m), wearing a short knit scarf; one continuous body mesh
-PALETTE: background #F3E6D3, ground #CDBA9A, fox #D9733A, fox belly #F6E9DA, scarf #3E6B8A, leaves #C9452E / #E3A43A / #8C5A2B, light warm #FFD7A0, light cool #A9C4E0
-SET:     a 4 m circle of packed-dirt path with a low stone edge, one leaning lamppost behind-left, soft falloff to PALETTE background
-PROPS:   a straw broom (1.0 m), 60 leaves (6–9 cm, seeded shapes and colors)
-ACCENTS: 4 small dust puffs per sweep stroke; scarf ends that trail in the gust
+HERO:    snail mail carrier, 0.07 m tall: soft foot 0.09 m long, two eye stalks 2.5 cm with ball tips, a spiral shell 5 cm wide, a leather satchel strapped to the shell with one letter always peeking out
+PALETTE: background #EADFCB, fence #8C6A4E, moss #6F8F4E, snail body #D9B48F, shell #B5653A, shell stripe #F0D2A0, satchel #5C3B2A, letter #FAF6EE, mailbox #3E6B8A, flag #D8432F, light warm #FFDDA8, light cool #BCD3E8
+SET:     a 5 cm garden fence rail with moss patches; garden blurred behind
+PROPS:   tiny mailboxes on posts 6 cm tall, spaced exactly 0.40 m along the rail, each with a red flag
+ACCENTS: a glistening slime trail on the rail, 20 seeded dust motes in the light
 
 FORMAT
-- Canvas 1080×1080, letterboxed to fit the window.
-- 30 fps, 8.0 s, 240 frames. Loops seamlessly: the frame at t = 8.0 equals frame 0.
-- window.renderAt(t) draws the frame for t from t alone. Playback calls renderAt(((now - start) / 1000) % 8).
-- ?frame=N renders frame N and stops. window.LENGTH = 8 and window.FPS = 30 are exposed.
-- All randomness from mulberry32 seeded with 41.
-- Each leaf's path is a function of t: scattered position → swept to pile (by its stroke) → lifted by the gust → back to its scattered position at t = 8.
+- 1080×1080, letterboxed. 30 fps, 8.0 s, 240 frames. The frame at t = 8.0 equals frame 0.
+- window.renderAt(t) draws the frame for t from t alone; playback calls renderAt(elapsed % 8). ?frame=N renders frame N and stops. window.LENGTH and window.FPS are exposed.
+- Randomness only from mulberry32 seeded with 23.
+- The camera follows the snail. Its rail position x(t) is a smooth function with x(8) = x(0) + 0.40 m and the same speed (0.07 m/s) at t = 0 and t = 8; it's stopped from 2.6 to 5.4 s. Because mailboxes repeat every 0.40 m, the next mailbox is exactly where this one was at t = 0. A mailbox's flag is up once the snail has passed it, so the box behind is always flag-up and the box ahead flag-down.
+- Pedal waves (5/s) and stalk bobs (0.5 Hz) complete whole cycles in 8 s.
 
 LOOK
-- Key: warm late-afternoon sun, PALETTE light warm, from 50° right, 25° up, intensity 2.6. Fill: PALETTE light cool sky at 0.4. Rim from behind-left at 1.2 to outline the tail.
-- Lens: vertical FOV 28°, depth of field focused on the HERO, slight background blur.
-- Fox: roughness 0.85, sheen 0.6 for a felted look. Leaves: roughness 0.6, slight transmission 0.2 so backlit leaves glow.
-- Post: AgX, exposure 1.0, vignette 0.15, grain 2%.
-- Soft shadow map 2048; contact shadows for the fox's feet and every leaf.
+- Key: PALETTE light warm late sun from 40° right, 30° up, 2.4, soft shadows (2048 PCF). Fill: PALETTE light cool at 0.35 from the left. Rim from behind at 1.0. No ambient.
+- Lens: vertical FOV 18°, camera 0.6 m away, 8° down at the snail; depth of field focused on the eye stalks, background blurred.
+- Body roughness 0.35, wet clearcoat 0.8; shell roughness 0.5, clearcoat 0.4, stripe along the spiral; satchel 0.8 with stitched edges; trail roughness 0.05 at 30% coverage.
+- Post: AgX, exposure 1.0, vignette 0.12, grain 2%.
 
 BEATS
-0.00–0.50 s (f0–15)     Leaves scattered across the path. Fox standing, broom held diagonally; looks down at the mess, ears flatten 10°.
-0.50–4.50 s (f15–135)   Four sweep strokes, 1.0 s each. Each: 0.25 s wind-up (body twists 15° away), 0.45 s sweep (broom arcs 70°, ease-out), 0.3 s recover. Each stroke pushes 15 leaves toward the pile point, 0.8 m in front-right. Feet stay planted; the fox shuffles one step left between strokes 2 and 3 (feet locked during contact).
-4.50–5.50 s (f135–165)  Fox leans on the broom, chest rises (breath in 0.5 s, out 0.5 s), eyes close, tail sways once.
-5.50–6.10 s (f165–183)  Wind. The lamppost sways 3°, scarf ends lift. Ears perk up, eyes open wide.
-6.10–7.20 s (f183–216)  The gust lifts the pile: leaves spiral up 0.4–1.0 m and drift back to their scattered positions (each on its own seeded curve, landing staggered over 0.6 s). Tail puffs 1.15×.
-7.20–8.00 s (f216–240)  Fox exhales, shoulders drop 4 cm, ears flatten back to the frame-0 pose, broom returns to diagonal. Frame 240 = frame 0.
+0.00–2.20 s (f0–66)     Cruising; foot ripples, stalks bob; the next mailbox enters from the right.
+2.20–2.60 s (f66–78)    Slows to a stop beside the mailbox; eye stalks lean toward the slot 15°.
+2.60–3.40 s (f78–102)   Anticipation: the body stretches up 8 mm, the shell tilts back 6°.
+3.40–4.30 s (f102–129)  The shell tilts forward 22° toward the slot; the peeking letter slides out of the satchel and into the slot (ease-in), gone by f126.
+4.30–4.80 s (f129–144)  The shell rights itself with a 4° overshoot; the next letter rises in the satchel to the same peeking pose as frame 0.
+4.80–5.40 s (f144–162)  One eye stalk nudges the flag up 90° (ease-out, 2-frame settle); the other stalk looks at the camera; a small proud body puff of 3%.
+5.40–8.00 s (f162–240)  Accelerates back to cruising speed and slides on; the mailbox exits left. Frame 240 = frame 0.
 
 CAMERA
-Fixed at 3.2 m from the HERO, 0.9 m high, looking at 0.45 m. A 0.08 m sideways drift following a sine with an 8 s period, so it loops.
-
-SOUND (optional)
-Web Audio, synthesized, starts on first click. Broom swish (bandpassed noise, 0.4 s) at f22, f52, f82, f112. Sigh (filtered noise, 0.6 s) at f150. Wind (low noise rising over 1 s) at f165. Leaf rustle at f190. Mute toggle.
+Follows the snail's x exactly, so the snail stays centered; the world moves. No other camera motion.
 
 TECHNICAL
-- One self-contained index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
-- WebGL2, sRGB output, DPR capped at 2. 60 fps real-time playback.
-- Leaves as one InstancedMesh.
+- One index.html, three.js 0.160.0. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
+- WebGL2, sRGB output, DPR ≤ 2. 60 fps real-time playback; if under 55, drop the depth of field first.
+- Corner controls: play/pause, scrubber, frame counter; mouse, touch and Space/←/→; auto-hide after 2 s, never over the snail.
 - prefers-reduced-motion: show frame 150 as a still with a play button.
-- Corner controls: play/pause, scrubber, frame counter; mouse, touch, and Space/←/→; auto-hide after 2 s.
 
 AVOID
-- Feet sliding during sweep strokes. Feet are locked to the ground during contact.
-- A fox built from visible separate spheres; body, head, and tail form one smooth silhouette.
-- Leaves popping between positions at the seam. Every leaf's path returns to its exact start.
-- The broom passing through the ground or the fox's legs.
-- Linear motion; every stroke has anticipation and follow-through.
-- Leaves floating above the ground at rest; each has a contact shadow.
-- Math.random() or accumulated state anywhere in the animation.
+- The foot sliding over the rail like a puck; pedal waves move along the foot at the stated rate, and the trail stays fixed in the world.
+- The shell as a plain sphere; it's a true spiral with growing whorls.
+- The letter popping at the seam; the satchel always shows one letter at frame 0 and again by f144.
+- Mailboxes or trail jumping at the seam.
+- The letter clipping through the mailbox wall instead of entering the slot.
+- Washed-out lighting: the snail's shadow side near 45%.
+- Math.random() or any state carried between frames.
 
 CHECKS
 Before delivering:
-1. Render frames 0, 60, 120, 150, 190, 239, 240 via ?frame=N and screenshot each.
-2. Frame 0 vs. frame 240: pixel difference under 0.5%. Frame 239 → 0 looks like continuous motion.
-3. renderAt(3.1), renderAt(7.0), renderAt(3.1) renders the same pixels for both 3.1 calls.
-4. Console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
-5. Step frames 15–135: feet don't slide during strokes; broom doesn't clip the ground or legs; each stroke moves its leaves.
-6. All leaves land with contact shadows by frame 216.
-Fix anything that fails, repeat, then deliver with the frames and a one-line result per check.
+1. Render frames 0, 66, 102, 120, 144, 160, 200, 239, 240 via ?frame=N and screenshot each.
+2. Frame 0 vs. frame 240: pixel difference under 0.5%. Frames 239 → 0 read as continuous motion.
+3. renderAt(3.9), renderAt(7.2), renderAt(3.9): both 3.9 calls render the same pixels.
+4. Read the console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
+5. Step f78–162: the letter enters the slot without clipping, the flag rises on its hinge, the snail doesn't drift during the stop.
+6. Each beat lands within ±1 frame of its timestamp.
+Fix anything that fails, repeat, then deliver the frames with one line per check.
 ```
 
 **Follow-up revisions**
 
 ```text
-If the sweep looks weightless: hold the wind-up pose 3 frames longer, add a 2-frame dust puff at broom contact, and drop the fox's hips 3 cm during each sweep.
+If the snail looks dry and rubbery: raise the body clearcoat to 1.0 with clearcoat roughness 0.08, add a 0.5 mm moist highlight line along the foot edge, and brighten the slime trail to 45% coverage.
 ```
 ```text
-If the leaves look like flat paper cards: bend each leaf with a 15° midrib curl in the vertex shader and add 0.3 transmission so backlit ones glow PALETTE light warm.
+If the delivery reads too fast: start the shell tilt at f96 instead of f102, slow the letter slide to 1.1 s, and hold the proud puff 6 frames longer.
 ```
 
-Best run in: a coding agent that can render specific frames headlessly and compare images.
+Best run in: a mid-tier coding model in an agent that can render specific frames headlessly and compare images.
 
 ---
 
-## Example 4: small playable game
+## Example 4: small playable game (Cheapest)
 
-**Input:** "a lighthouse game where you guide boats"
+**Input:** "quick prototype: a tugboat game where you push barges into a harbor"
+
+**Skill asks:** nothing. "quick prototype" picks the Cheapest tier.
 
 **Output:**
 
-Decisions: Balanced tier; playable game; top-down 3/4 view of a small bay at night; the player rotates and focuses the lighthouse beam to reveal rocks and guide boats into harbor; 3-minute rounds with rising traffic; low-poly flat-shaded look.
+Decisions: Cheapest tier (from "quick prototype"); playable game; top-down 3/4 view of a small harbor; steer one tugboat and nudge barges into three berths before a 120 s timer runs out; simple materials, no post, light checks.
 
 ```text
-Build a single-file 3D browser game: you are a lighthouse keeper guiding boats through a rocky bay at night by aiming the beam. Calm to start, frantic by the end, readable at a glance.
+Build a single-file 3D browser game prototype: steer a little tugboat and nudge drifting barges into their berths before the harbor clock runs out. Simple, readable, fun in the first ten seconds.
 
 BRAND
-HERO:    the lighthouse, 6 m tall, white with two PALETTE danger-red bands, a rotating lamp head with a 22° cone beam
-PALETTE: sea #0E2233, sea highlight #2B5C7A, land #31402E, rocks #4A4A52, beam #FFE9A8, boats #E8E1D2, harbor #F2B84B, danger #D8432F, UI ink #F4F1E8, UI surface #0A1824CC
-WORLD:   a 120 m × 80 m bay, lighthouse on a headland bottom-center, harbor mouth top-right, 14 rock clusters (seeded), open sea entrances on the left and top edges
-PROPS:   boats (rowboat 3 m, fishing boat 6 m, ferry 10 m), buoys at the harbor mouth
-ACCENTS: wake trails behind boats, a foam burst on a crash, fog banks drifting across
+HERO:    a tugboat, 4 m long, chunky hull, a short funnel, a tire bumper on the bow
+PALETTE: water #2B6F8C, dock #8A7A66, tug #D8432F, tug trim #F4EFE6, barge #5E6B73, berth #F2C14E, UI ink #1C2328, UI surface #F4EFE6
+WORLD:   an 80 m × 60 m harbor with a dock wall along the top holding 3 berths (12 m wide, PALETTE berth stripes), open sea along the bottom
+PROPS:   barges, 14 m × 6 m, drifting in from the sea edge
 
 CORE LOOP
-Boats enter from the sea edges and steer toward any light. Keep each boat in the beam so it follows a safe path into the harbor. Boats left in darkness for 4 s drift toward the nearest rocks.
-Round: 180 s. Lose after 3 crashes. Score = boats docked × size multiplier (1/2/4) + streak bonus.
+Push each barge into a berth with the tug's bow. A barge held inside its berth's stripes for 1.5 s scores: the berth flashes PALETTE berth for 0.3 s and the barge sinks away; a new one drifts in. Round: 120 s. Score = barges docked.
 
 PLAYER
-- Controls: mouse aims the beam (lamp head turns toward the cursor at 140°/s max), hold left mouse or Space to narrow the beam to 10° (reach 60 m vs. 35 m). Touch: drag anywhere to aim, hold a second finger to narrow.
-- The narrow beam drains Lamp Oil (100 units, 12/s drain, 6/s regen when wide).
+- Controls: arrow keys or WASD for throttle and rudder. Touch: drag on the left half for direction and throttle.
+- Tug: max speed 6 m/s, acceleration 3 m/s², turn rate 70°/s, water drag 0.6.
+- Pushing: tug–barge contact transfers momentum; a barge has 8× the tug's mass and drag 0.3.
 
-ENEMIES AND AI
-- Boats steer toward the brightest lit point within 50 m of their bow using simple steering (seek + rock avoidance only when lit). Speed: rowboat 2.5 m/s, fishing 4 m/s, ferry 3 m/s with 2× turning radius.
-- Unlit for 4 s: boat drifts toward nearest rock at 1.5 m/s; a danger-colored ring pulses around it as a warning.
-- Fog banks (2–4, 20 m wide) cut beam reach by half while it crosses them.
-- Spawns: one boat every 12 s at start, every 5 s by 150 s; ferries from 60 s on.
-
-PROGRESSION
-Waves every 45 s raise spawn rate and fog count. A streak of 5 docks without a crash grants +20 Lamp Oil. High score in localStorage.
+BARGES
+- Up to 3 at once, spawning every 10 s at the sea edge with a 0.8 m/s drift toward the dock wall.
+- Barges bounce softly off the dock wall (restitution 0.2) and off each other.
 
 HUD
-Top-left: score and streak, "Space Grotesk" 600 22 px, UI ink. Top-right: round timer. Bottom-center: Lamp Oil bar 240 × 10 px in beam color. Three lighthouse icons for lives. Start screen with controls, pause on Esc or blur, game over with score, best, and "Restart (R)".
+Top-left: score and timer in "Archivo" 700 22 px, UI ink on a UI surface pill. A start screen with controls; game over with score, best (localStorage) and "Restart (R)".
 
 LOOK
-Flat-shaded low-poly, MeshStandardMaterial roughness 0.9. Moonlight #7F95B8 at 0.25 from top-left; the beam is a SpotLight plus a soft additive cone mesh. Water: vertex-displaced plane (two sine waves, 0.15 m amplitude) with beam reflection. Exponential fog #0B1C2A density 0.012.
+Flat-shaded low-poly, MeshStandardMaterial roughness 0.8. One directional light at 3.0 from top-left with a 1024 shadow map, hemisphere fill 0.5; no post-processing. Water: a flat plane with a slow two-tone noise.
 
 CAMERA
-Fixed 3/4 top-down: 55° pitch, FOV 40°, framing the whole bay with 5% margin. Shake 0.15 m / 0.25 s on a crash.
-
-SOUND (optional)
-Web Audio synthesized: horn on spawn, bell on dock, low thud plus noise on crash, gentle wave bed. Starts after first input. M toggles mute.
+Fixed 3/4 top-down, 50° pitch, FOV 45°, framing the whole harbor with a 5% margin.
 
 TECHNICAL
-- One self-contained index.html, three.js 0.160.0; custom circle colliders, no physics engine. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
-- WebGL2, DPR capped at 2.
-- Fixed 60 Hz simulation with interpolated rendering; the same gameplay on 30, 60, and 144 Hz displays.
-- Seeded PRNG for rocks, spawns, and fog; ?seed=N reproduces a run.
-- Pooled boats (max 20 live). Mouse, keyboard, and touch. 60 fps target.
-- prefers-reduced-motion: no camera shake, crash flash becomes a ring.
-- ?debug=1 draws colliders, boat targets, and fps.
+- One index.html, three.js 0.160.0; simple circle-and-box collisions, no physics engine. No CDN: `npm install three@0.160.0`, then a build.mjs inlines node_modules/three/build/three.module.js and every addon used (examples/jsm), following their relative imports and rewriting them to `three/addons/<path>`, as base64 `data:` URLs in an import map, with the app in an inline module. Deliver index.html, build.mjs and the app source.
+- WebGL2, DPR ≤ 2. Fixed 60 Hz simulation; seeded spawns (?seed=N). Keyboard, mouse and touch. 60 fps.
+- prefers-reduced-motion: the docking flash becomes a static outline.
 
 AVOID
-- Boats that teleport or snap direction. Turning rate is limited and visible.
-- Crashes that don't match the visuals; colliders match boat and rock outlines within 5%.
-- Boats overlapping each other; add separation steering at 4 m.
-- A beam that's only a flat transparent triangle. Use a real SpotLight on the water plus the cone mesh, with a 0.3 depth fade where the cone meets the water.
-- Washed-out water. The unlit sea stays near PALETTE sea; only the beam brightens it.
-- Ending the round without a clear restart path.
+- A tug that turns on the spot like a tank; rudder turning needs forward speed.
+- Barges that stop dead when the tug leaves; they keep drifting with drag.
+- Colliders that don't match the hulls.
+- A round with no clear restart.
 
 DEFINITION OF DONE
 Before delivering:
-1. Play 3 full rounds with scripted input: aim at incoming boats, use the narrow beam, let one boat crash, dock at least 5.
-2. Screenshot the start screen, 30 s in, 150 s in with fog, a crash moment, and game over.
-3. With ?debug=1, confirm boats can't leave the WORLD, never overlap, and colliders match visuals.
-4. Console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
-5. Test touch at 390×844 and mouse at 1440×900.
-6. Balance: an idle player loses in 50–80 s; a steady player docks 12+ boats per round.
-Fix anything that fails, repeat, then deliver with screenshots and a one-line result per check.
+1. Play one round with scripted input: steer to a barge, push it into a berth, let the timer run out, restart.
+2. Screenshot mid-round with a barge in a berth, and the game-over screen.
+3. Read the console: zero errors or warnings. With the network blocked, the page loads with zero requests and logs THREE.REVISION 160 once at startup.
+Fix anything that fails once, then deliver with the two screenshots.
 ```
 
 **Follow-up revisions**
 
 ```text
-If the beam looks flat: add a dust-mote layer inside the cone (200 seeded particles, size 2 px, beam color at 0.35) and raise the SpotLight intensity 1.5× so the water highlight reads.
+If pushing barges feels like hitting walls: lower barge mass to 5× the tug's, raise tug acceleration to 4 m/s², and add a 0.2 s soft contact spring before momentum transfers.
 ```
 ```text
-If the game feels too easy after a minute: shorten the drift timer from 4 s to 3 s after 90 s and add a 4th fog bank at 120 s.
+If the harbor looks empty: add 6 bollards along the dock wall, a 1 m wake trail behind the tug in PALETTE tug trim at 40%, and a slow 0.1 m water bob on every barge.
 ```
 
-Best run in: a coding agent that can play the game in a headless browser with scripted inputs and read the console.
+Best run in: a fast, low-cost model in chat or a light agent; it's a small, self-contained build.

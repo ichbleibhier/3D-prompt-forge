@@ -1,0 +1,5 @@
+# Keep the showcase site out of the skill download (git archive / zip)
+site/ export-ignore
+docs/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore

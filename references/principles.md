@@ -121,7 +121,9 @@ Unless the user says otherwise:
   bare specifier (GSAP 3.12.5, Lenis 1.1.13, cannon-es 0.20.0, …).
 - Write the inlining instruction into the prompt itself. The executing model never sees
   this file, so a bare "inline three.js" isn't enough; use the standard line in the
-  templates. That line (about 60 words) doesn't count toward the length bands in §11.
+  templates. That line (about 60 words) doesn't count toward the length bands in §11,
+  and neither do the standard mechanics lines of an `ASSETS (Blender)` section (the
+  per-asset list does count).
 - The definition of done includes an offline check: with the network blocked, the page
   makes zero requests and logs `THREE.REVISION` 160 at startup.
 - Name the renderer: WebGL2 via `THREE.WebGLRenderer`, or WebGPU with a WebGL2 fallback.
