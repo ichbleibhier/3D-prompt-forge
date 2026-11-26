@@ -9,7 +9,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 const PIXEL = 4; // css px per art pixel
 // Soot and ash from the page, steel grays, wood, and the heat ramp.
 const PALETTE = [
-  '#15120e', '#1e1914', '#28211a', '#3a3128', '#4a4036', '#6a5f53', '#a89c8a', '#f1e9dc',
+  '#15120e', '#0c0a08', '#1e1914', '#28211a', '#3a3128', '#4a4036', '#6a5f53', '#a89c8a', '#f1e9dc',
   '#2b2d30', '#45484c', '#6d7075', '#9aa0a6',
   '#3a2216', '#5e331b', '#8e2b1b', '#c4321c', '#ff6a1a', '#ffb347', '#ffe9a8',
 ];
@@ -72,10 +72,10 @@ export function createForge(canvas, { reducedMotion }) {
   const target = new THREE.Vector3(0.08, 0.46, 0);
 
   // Lights: forge glow from the left, cool rim from the back right, dim key.
-  const forgeLight = new THREE.PointLight(COLORS.glow, 3, 4, 1.6);
-  forgeLight.position.set(-0.9, 0.35, 0.5);
+  const forgeLight = new THREE.PointLight(COLORS.glow, 1.5, 4, 1.6);
+  forgeLight.position.set(-1.0, 0.3, -0.4);
   scene.add(forgeLight);
-  const key = new THREE.DirectionalLight(0xffe2c4, 0.6);
+  const key = new THREE.DirectionalLight(0xf3e8da, 1.3);
   key.position.set(0.6, 1.6, 0.9);
   key.castShadow = true;
   key.shadow.mapSize.set(512, 512);
@@ -87,38 +87,37 @@ export function createForge(canvas, { reducedMotion }) {
   rim.position.set(1.2, 0.9, -1.4);
   scene.add(rim);
 
-  // Floor and stump.
-  // Floor shows only shadows, so the page color runs right under the stump.
-  const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(8, 64),
-    new THREE.ShadowMaterial({ opacity: 0.55, color: 0x000000 })
+  // No floor: the page color runs underneath. A flat dark ellipse is the floating anvil's
+  // shadow (it lands on the palette's outline color), shrinking as the anvil rises.
+  const shadow = new THREE.Mesh(
+    new THREE.CircleGeometry(0.22, 40),
+    new THREE.MeshBasicMaterial({ color: 0x000000, fog: false })
   );
-  floor.rotation.x = -Math.PI / 2;
-  floor.receiveShadow = true;
-  scene.add(floor);
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.scale.set(1.2, 0.55, 1);
+  scene.add(shadow);
 
-  const stump = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.21, 0.24, 0.2, 40),
-    new THREE.MeshStandardMaterial({ color: 0x3a2414, roughness: 0.95, envMapIntensity: 0.15 })
-  );
-  stump.position.y = 0.1;
-  stump.castShadow = stump.receiveShadow = true;
-  scene.add(stump);
+  // Everything that floats together: anvil, face, bar, hammer, sparks.
+  // Turned 25 degrees toward the camera and tipped 4 degrees; bobs in frame().
+  const rig = new THREE.Group();
+  const RIG_YAW = -0.44, RIG_TILT = 0.07;
+  rig.rotation.set(0, RIG_YAW, RIG_TILT);
+  scene.add(rig);
 
   const anvil = new THREE.Mesh(
     anvilGeometry(),
-    new THREE.MeshStandardMaterial({ color: COLORS.steel, metalness: 0.85, roughness: 0.42 })
+    new THREE.MeshStandardMaterial({ color: 0x5c5a57, metalness: 0.45, roughness: 0.5 })
   );
   anvil.position.y = 0.2;
   anvil.castShadow = anvil.receiveShadow = true;
-  scene.add(anvil);
+  rig.add(anvil);
   // Polished working face.
   const face = new THREE.Mesh(
     new THREE.BoxGeometry(0.4, 0.004, 0.13),
     new THREE.MeshStandardMaterial({ color: COLORS.steelFace, metalness: 1, roughness: 0.22 })
   );
   face.position.set(0.095, 0.2 + 0.36 + 0.009, 0);
-  scene.add(face);
+  rig.add(face);
 
   // The bar being worked.
   const barMat = new THREE.MeshStandardMaterial({
@@ -129,10 +128,10 @@ export function createForge(canvas, { reducedMotion }) {
   bar.position.set(0.06, face.position.y + 0.011, 0.0);
   bar.rotation.y = -0.12;
   bar.castShadow = true;
-  scene.add(bar);
+  rig.add(bar);
   const barGlow = new THREE.PointLight(COLORS.hot, 1.2, 0.8, 2);
   barGlow.position.set(0.06, face.position.y + 0.06, 0.05);
-  scene.add(barGlow);
+  rig.add(barGlow);
 
   // Hammer: pivots at the end of the handle.
   const hammer = new THREE.Group();
@@ -153,7 +152,7 @@ export function createForge(canvas, { reducedMotion }) {
   // Head bottom meets the bar's top at the contact angle (-0.02 rad).
   pivot.position.set(0.42, face.position.y + 0.092, 0.02);
   pivot.add(hammer);
-  scene.add(pivot);
+  rig.add(pivot);
 
   // Sparks: a pool of points, each with a seeded velocity.
   const MAX = 260;
@@ -172,7 +171,7 @@ export function createForge(canvas, { reducedMotion }) {
     blending: THREE.AdditiveBlending,
   }));
   sparks.frustumCulled = false; // bounds were computed while every spark sat at 0,0,0
-  scene.add(sparks);
+  rig.add(sparks);
   const hotC = new THREE.Color(0xffc04a), coolC = new THREE.Color(0xb3200c);
 
   function burst(count) {
@@ -284,7 +283,7 @@ export function createForge(canvas, { reducedMotion }) {
     barMat.emissiveIntensity = glowLevel;
     barMat.emissive.setRGB(1, 0.32 + heat * 0.35 + impactGlow * 0.2, 0.08 + heat * 0.18);
     barGlow.intensity = 0.6 + glowLevel * 0.9;
-    forgeLight.intensity = 2.2 + heat * 2 + Math.sin(now * 0.004) * 0.25 + Math.sin(now * 0.011) * 0.15;
+    forgeLight.intensity = 1.0 + heat * 1.2 + Math.sin(now * 0.004) * 0.25 + Math.sin(now * 0.011) * 0.15;
 
     for (let i = 0; i < MAX; i++) {
       if (life[i] <= 0) { pos[i * 3 + 1] = -10; continue; }
@@ -293,7 +292,6 @@ export function createForge(canvas, { reducedMotion }) {
       pos[i * 3] += vel[i * 3] * dt;
       pos[i * 3 + 1] += vel[i * 3 + 1] * dt;
       pos[i * 3 + 2] += vel[i * 3 + 2] * dt;
-      if (pos[i * 3 + 1] < 0.002) { pos[i * 3 + 1] = 0.002; vel[i * 3 + 1] *= -0.3; vel[i * 3] *= 0.6; }
       const k = Math.max(0, life[i] / ttl[i]);
       // Yellow when fresh, cooling through orange to red; brightness held so the palette keeps the hue.
       const c = coolC.clone().lerp(hotC, k);
@@ -301,6 +299,14 @@ export function createForge(canvas, { reducedMotion }) {
     }
     sparkGeo.attributes.position.needsUpdate = true;
     sparkGeo.attributes.color.needsUpdate = true;
+
+    // Float: a slow bob and sway; the strike nudges the rig down 6 mm.
+    const tt = now / 1000, still = reducedMotion ? 0 : 1;
+    rig.position.y = 0.06 + still * Math.sin(tt * 1.3) * 0.014 - impactGlow * 0.006;
+    rig.rotation.y = RIG_YAW + still * Math.sin(tt * 0.5) * 0.05;
+    rig.rotation.x = still * Math.sin(tt * 0.9 + 1) * 0.02;
+    const lift = rig.position.y - 0.06;
+    shadow.scale.set(1.2 - lift * 6, 0.55 - lift * 2.5, 1);
 
     const px = reducedMotion ? 0 : pointer.x * 0.12, py = reducedMotion ? 0 : pointer.y * 0.05;
     camera.position.set(camBase.x + px, camBase.y + py, camBase.z);
