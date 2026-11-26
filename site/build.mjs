@@ -9,7 +9,7 @@ import * as esbuild from 'esbuild';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(here, '..');
-const REPO_URL = 'https://github.com/brother12334/3D-prompt-forge';
+const REPO_URL = 'https://github.com/ichbleibhier/3D-prompt-forge';
 const CLONE_URL = REPO_URL + '.git';
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

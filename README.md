@@ -104,7 +104,7 @@ Details are in [`references/quality-tiers.md`](references/quality-tiers.md).
 Copy the folder into your personal skills directory:
 
 ```bash
-git clone https://github.com/brother12334/3D-prompt-forge.git ~/.claude/skills/3d-prompt-forge
+git clone https://github.com/ichbleibhier/3D-prompt-forge.git ~/.claude/skills/3d-prompt-forge
 ```
 
 Or, for a single project, into that project's `.claude/skills/3d-prompt-forge/`.
